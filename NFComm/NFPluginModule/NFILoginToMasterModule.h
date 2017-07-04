@@ -1,25 +1,26 @@
 // -------------------------------------------------------------------------
-//    @FileName         £º    NFILoginNet_ClientModule.h
-//    @Author           £º    LvSheng.Huang
-//    @Date             £º    2012-12-15
-//    @Module           £º    NFILoginNet_ClientModule
+
+
+
+
 //
 // -------------------------------------------------------------------------
 
-#ifndef _NFI_LOGINNET_CLIENTMODULE_H
-#define _NFI_LOGINNET_CLIENTMODULE_H
+#ifndef NFI_LOGINNET_CLIENTMODULE_H
+#define NFI_LOGINNET_CLIENTMODULE_H
 
 #include <iostream>
-#include "NFILogicModule.h"
-#include "NFIClusterClientModule.hpp"
+#include "NFIModule.h"
+#include "NFINetClientModule.h"
 #include "NFComm/NFMessageDefine/NFMsgPreGame.pb.h"
 
 class NFILoginToMasterModule
-    : public NFIClusterClientModule
+    : public NFIModule
 {
-
 public:
+	virtual NFINetClientModule* GetClusterModule() = 0;
     virtual NFMapEx<int, NFMsg::ServerInfoReport>& GetWorldMap() = 0;
+    virtual void AddServerInfoExt(const std::string& key, const std::string& value) = 0;
 };
 
 #endif

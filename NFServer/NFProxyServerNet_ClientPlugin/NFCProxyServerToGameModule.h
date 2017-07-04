@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------
-//    @FileName      :    NFCProxyServerToGameModule.h
+//    @FileName			:    NFCProxyServerToGameModule.h
 //    @Author           :    LvSheng.Huang
 //    @Date             :    2013-05-06
 //    @Module           :    NFCProxyServerToGameModule
@@ -12,15 +12,15 @@
 
 #include <string>
 #include "NFComm/NFMessageDefine/NFMsgDefine.h"
-#include "NFComm/NFCore/NFCHeartBeatManager.h"
 #include "NFComm/NFPluginModule/NFIProxyServerToGameModule.h"
 #include "NFComm/NFPluginModule/NFIProxyServerNet_ServerModule.h"
 #include "NFComm/NFPluginModule/NFIKernelModule.h"
 #include "NFComm/NFPluginModule/NFIProxyLogicModule.h"
 #include "NFComm/NFPluginModule/NFINetModule.h"
-#include "NFComm/NFPluginModule/NFIElementInfoModule.h"
+#include "NFComm/NFPluginModule/NFIElementModule.h"
 #include "NFComm/NFPluginModule/NFILogModule.h"
-#include "NFComm/NFPluginModule/NFILogicClassModule.h"
+#include "NFComm/NFPluginModule/NFIClassModule.h"
+#include "NFComm/NFPluginModule/NFINetClientModule.h"
 
 
 class NFCProxyServerToGameModule : public NFIProxyServerToGameModule
@@ -37,30 +37,29 @@ public:
     virtual bool Execute();
 
     virtual bool AfterInit();
-
-    virtual void LogRecive(const char* str) {}
-    virtual void LogSend(const char* str) {}
-
+	virtual void AddServerInfoExt(const std::string& key, const std::string& value);
 
 protected:
 
-    void OnReciveGSPack(const int nSockIndex, const int nMsgID, const char* msg, const uint32_t nLen);
     void OnSocketGSEvent(const int nSockIndex, const NF_NET_EVENT eEvent, NFINet* pNet);
 
     void Register(NFINet* pNet);
 
     void OnAckEnterGame(const int nSockIndex, const int nMsgID, const char* msg, const uint32_t nLen);
-    virtual void LogServerInfo(const std::string& strServerInfo);
+    void LogServerInfo(const std::string& strServerInfo);
+
+	void Transpond(const int nSockIndex, const int nMsgID, const char* msg, const uint32_t nLen);
 
 private:
 
     NFILogModule* m_pLogModule;
-    NFIProxyLogicModule* m_pProxyLogicModule;
     NFIKernelModule* m_pKernelModule;
     NFIProxyServerNet_ServerModule* m_pProxyServerNet_ServerModule;
-    NFIElementInfoModule* m_pElementInfoModule;
-    NFILogicClassModule* m_pLogicClassModule;
+    NFIElementModule* m_pElementModule;
+    NFIClassModule* m_pClassModule;
+	NFINetClientModule* m_pNetClientModule;
 
+	std::map<std::string, std::string> m_mServerInfoExt;
 };
 
 #endif

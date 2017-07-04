@@ -1,20 +1,20 @@
 // -------------------------------------------------------------------------
-//    @FileName         £º    NFIProxyServerNet_ServerModule.h
-//    @Author           £º    LvSheng.Huang
-//    @Date             £º    2012-12-15
-//    @Module           £º    NFIProxyServerNet_ServerModule
+
+
+
+
 //
 // -------------------------------------------------------------------------
 
-#ifndef _NFI_PROXYNET_SERVERMODULE_H
-#define _NFI_PROXYNET_SERVERMODULE_H
+#ifndef NFI_PROXYNET_SERVERMODULE_H
+#define NFI_PROXYNET_SERVERMODULE_H
 
 #include <iostream>
-#include "NFILogicModule.h"
+#include "NFIModule.h"
 #include "NFINetModule.h"
 
 class NFIProxyServerNet_ServerModule
-    :  public NFINetModule
+    :  public NFIModule
 {
 
 public:

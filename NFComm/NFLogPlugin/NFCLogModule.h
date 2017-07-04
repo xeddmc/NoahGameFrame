@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------
-//    @FileName      :    NFCLogModule.h
+//    @FileName			:    NFCLogModule.h
 //    @Author           :    LvSheng.Huang
 //    @Date             :    2012-12-15
 //    @Module           :    NFCLogModule
@@ -19,6 +19,7 @@ public:
     NFCLogModule(NFIPluginManager* p);
     virtual ~NFCLogModule() {}
 
+	virtual bool Awake();
     virtual bool Init();
     virtual bool Shut();
 
@@ -43,9 +44,8 @@ public:
 
     virtual bool LogDebugFunctionDump(const NFGUID ident, const int nMsg, const std::string& strArg, const char* func = "", const int line = 0);
     virtual bool ChangeLogLevel(const std::string& strLevel);
-protected:
-    friend class NFCKernelModule;
 
+protected:
     virtual bool Log(const NF_LOG_LEVEL nll, const char* format, ...);
 
     static bool CheckLogFileExist(const char* filename);
@@ -53,6 +53,7 @@ protected:
 
 private:
     static unsigned int idx;
+    uint64_t mnLogCountTotal;
 };
 
 #endif

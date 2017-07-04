@@ -1,8 +1,8 @@
 // -------------------------------------------------------------------------
-//    @FileName         £º    NFIGuildEctypeModule.h
-//    @Author           £º    LvSheng.Huang
-//    @Date             £º    2012-12-15
-//    @Module           £º    NFIGuildEctypeModule
+
+
+
+
 //
 // -------------------------------------------------------------------------
 
@@ -10,15 +10,17 @@
 #define NFI_GUILDECTYPE_MODULE_H
 
 #include <iostream>
-#include "NFILogicModule.h"
+#include "NFIModule.h"
 #include "NFIBuffConfigModule.h"
 
 
 class NFIGuildEctypeModule
-    : public NFILogicModule
+    : public NFIModule
 {
 public:
-
+    virtual bool CreateGuilEctype(const NFGUID& self, const NFGUID& guild) = 0;
+    virtual bool DestroyGuildEctype(const NFGUID& self, const NFGUID& guild) = 0;
+    virtual bool ApplyEnterGuilEctype(const NFGUID& self, const NFGUID& guild) = 0;
 };
 
 #endif

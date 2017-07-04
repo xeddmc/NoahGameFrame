@@ -11,9 +11,9 @@
 
 #include "NFComm/NFPluginModule/NFPlatform.h"
 #include "NFComm/NFPluginModule/NFGUID.h"
-#include "NFComm/NFPluginModule/NFILogicModule.h"
+#include "NFComm/NFPluginModule/NFIModule.h"
 
-class NFIComponent : public NFILogicModule
+class _NFExport NFIComponent : public NFIModule
 {
 private:
     NFIComponent()
@@ -52,6 +52,7 @@ public:
 
     virtual bool SetEnable(const bool bEnable)
     {
+        mbEnable = bEnable;
         return mbEnable;
     }
 

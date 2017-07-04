@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------
-//    @FileName      :    NFUrlPlugin.cpp
+//    @FileName			:    NFUrlPlugin.cpp
 //    @Author           :    LvSheng.Huang
 //    @Date             :    2013-07-08 23:51
 //    @Module           :    NFUrlPlugin
@@ -37,15 +37,14 @@ const std::string NFUrlPlugin::GetPluginName()
     return GET_CLASS_NAME(NFUrlPlugin)
 }
 
-       void NFUrlPlugin::Install()
+void NFUrlPlugin::Install()
 {
-    REGISTER_MODULE(pPluginManager, NFCUrlClientModule)
-    REGISTER_MODULE(pPluginManager, NFCUrlCodeModule)
-
+    REGISTER_MODULE(pPluginManager, NFIUrlClientModule, NFCUrlClientModule)
+    REGISTER_MODULE(pPluginManager, NFIUrlCodeModule, NFCUrlCodeModule)
 }
 
 void NFUrlPlugin::Uninstall()
 {
-    UNREGISTER_MODULE(pPluginManager, NFCUrlCodeModule)
-    UNREGISTER_MODULE(pPluginManager, NFCUrlClientModule)
+    UNREGISTER_MODULE(pPluginManager, NFIUrlCodeModule, NFCUrlCodeModule)
+    UNREGISTER_MODULE(pPluginManager, NFIUrlClientModule, NFCUrlClientModule)
 }

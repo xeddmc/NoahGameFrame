@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------
-//    @FileName      :    NFCUrlClientModule.cpp
+//    @FileName			:    NFCUrlClientModule.cpp
 //    @Author           :    LvSheng.Huang
 //    @Date             :    2013-07-08
 //    @Module           :    NFCUrlClientModule
@@ -56,15 +56,16 @@ bool NFCUrlClientModule::Execute()
 
 bool NFCUrlClientModule::AfterInit()
 {
-    m_pUrlCodeModule = pPluginManager->FindModule<NFIUrlCodeModule>("NFCUrlCodeModule");
-
-    assert(NULL != m_pUrlCodeModule);
+    m_pUrlCodeModule = pPluginManager->FindModule<NFIUrlCodeModule>();
+	m_pActorModule = pPluginManager->FindModule<NFIActorModule>();
 
     if (!mbInitCurl)
     {
         mbInitCurl = true;
         curl_global_init(CURL_GLOBAL_ALL);
     }
+
+	StartActorPool(10);
     return true;
 }
 
@@ -240,15 +241,9 @@ int NFCUrlClientModule::HttpReq(const std::string& strUrl, const std::string& st
 
 bool NFCUrlClientModule::StartActorPool(const int nCount)
 {
-    NFIActorManager* pActorManager = pPluginManager->GetActorManager();
-    if (NULL == pActorManager)
-    {
-        return false;
-    }
-
     for (int i = 0; i < nCount; i++)
     {
-        int nActorID = pActorManager->RequireActor<NFCURLComponent>(this, &NFCUrlClientModule::HttpRequestAsyEnd);
+        int nActorID = m_pActorModule->RequireActor<NFCURLComponent>(this, &NFCUrlClientModule::HttpRequestAsyEnd);
         if (nActorID > 0)
         {
             mActorList.AddElement(i, NF_SHARE_PTR<int> (NF_NEW int(nActorID)));
@@ -261,15 +256,9 @@ bool NFCUrlClientModule::StartActorPool(const int nCount)
 bool NFCUrlClientModule::CloseActorPool()
 {
     int nActor = 0;
-    NFIActorManager* pActorManager = pPluginManager->GetActorManager();
-    if (NULL == pActorManager)
-    {
-        return false;
-    }
-
     for (NF_SHARE_PTR<int> pData = mActorList.First(nActor); pData != NULL; pData = mActorList.Next(nActor))
     {
-        pActorManager->ReleaseActor(nActor);
+		m_pActorModule->ReleaseActor(nActor);
     }
 
     mActorList.ClearAll();
@@ -323,12 +312,6 @@ int NFCUrlClientModule::HttpRequestAs(const NFGUID& self, const std::string& str
     pUrlParam->mFunRsp = RspFucn;
     pUrlParam->mstrUseData = strUseData;
 
-    NFIActorManager* pActorManager = pPluginManager->GetActorManager();
-    if (NULL == pActorManager)
-    {
-        return -1;
-    }
-
     int nAcotrID = GetActor();
     if (nAcotrID <= 0)
     {
@@ -348,7 +331,7 @@ int NFCUrlClientModule::HttpRequestAs(const NFGUID& self, const std::string& str
         return -4;
     }
 
-    if (!pActorManager->SendMsgToActor(nAcotrID, self, nEvetID, arg))
+    if (!m_pActorModule->SendMsgToActor(nAcotrID, self, nEvetID, arg))
     {
         mReqList.RemoveElement(pUrlParam->nReqID);
         return -5;

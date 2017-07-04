@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------
-//    @FileName      :    NFProxyServerNet_ClientPlugin.cpp
+//    @FileName			:    NFProxyServerNet_ClientPlugin.cpp
 //    @Author           :    LvSheng.Huang
 //    @Date             :    2013-05-06
 //    @Module           :    NFProxyServerNet_ClientPlugin
@@ -36,17 +36,17 @@ const int NFProxyServerNet_ClientPlugin::GetPluginVersion()
 
 const std::string NFProxyServerNet_ClientPlugin::GetPluginName()
 {
-    return GET_CLASS_NAME(NFProxyServerNet_ClientPlugin)
+	return GET_CLASS_NAME(NFProxyServerNet_ClientPlugin);
 }
 
-       void NFProxyServerNet_ClientPlugin::Install()
+void NFProxyServerNet_ClientPlugin::Install()
 {
-    REGISTER_MODULE(pPluginManager, NFCProxyServerToWorldModule)
-    REGISTER_MODULE(pPluginManager, NFCProxyServerToGameModule)
+    REGISTER_MODULE(pPluginManager, NFIProxyServerToWorldModule, NFCProxyServerToWorldModule)
+    REGISTER_MODULE(pPluginManager, NFIProxyServerToGameModule, NFCProxyServerToGameModule)
 }
 
 void NFProxyServerNet_ClientPlugin::Uninstall()
 {
-    UNREGISTER_MODULE(pPluginManager, NFCProxyServerToGameModule)
-    UNREGISTER_MODULE(pPluginManager, NFCProxyServerToWorldModule)
+    UNREGISTER_MODULE(pPluginManager, NFIProxyServerToGameModule, NFCProxyServerToGameModule)
+    UNREGISTER_MODULE(pPluginManager, NFIProxyServerToWorldModule, NFCProxyServerToWorldModule)
 }

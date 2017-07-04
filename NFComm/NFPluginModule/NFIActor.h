@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------
-//    @FileName      :    NFIActor.h
+//    @FileName			:    NFIActor.h
 //    @Author           :    LvSheng.Huang
 //    @Date             :    2012-12-15
 //    @Module           :    NFIActor
@@ -13,88 +13,24 @@
 
 #include <map>
 #include <string>
-
 #include <Theron/Theron.h>
-
-#include "NFILogicModule.h"
-#include "NFIActorManager.h"
+#include "NFIModule.h"
+#include "NFIActorModule.h"
 #include "NFComm/NFCore/NFIComponent.h"
 
-class NFIActorMessage
+class NFIActor : public Theron::Actor, public NFIModule
 {
 public:
-    NFIActorMessage()
+    NFIActor(Theron::Framework& framework, NFIActorModule* pManager) : Theron::Actor(framework)
     {
-        eType = EACTOR_UNKNOW;
-        nSubMsgID = 0;
-        nFormActor = 0;
-    }
-
-    enum EACTOR_MESSAGE_ID
-    {
-        EACTOR_UNKNOW,
-        EACTOR_INIT,
-        EACTOR_AFTER_INIT,
-        EACTOR_CHECKCONFIG,
-        EACTOR_EXCUTE,
-        EACTOR_BEFORE_SHUT,
-        EACTOR_SHUT,
-        EACTOR_NET_MSG,
-        EACTOR_TRANS_MSG,
-        EACTOR_LOG_MSG,
-        EACTOR_EVENT_MSG,
-        EACTOR_RETURN_EVENT_MSG,
-
-        EACTOR_GET_PROPERTY_MSG_INT = 100,
-        EACTOR_GET_PROPERTY_MSG_FLOAT,
-        EACTOR_GET_PROPERTY_MSG_DOUBLE,
-        EACTOR_GET_PROPERTY_MSG_STRING,
-        EACTOR_GET_PROPERTY_MSG_OBJECT,
-
-        EACTOR_SET_PROPERTY_MSG_INT = 110,
-        EACTOR_SET_PROPERTY_MSG_FLOAT,
-        EACTOR_SET_PROPERTY_MSG_DOUBLE,
-        EACTOR_SET_PROPERTY_MSG_STRING,
-        EACTOR_SET_PROPERTY_MSG_OBJECT,
-
-        EACTOR_GET_RECORD_MSG_INT = 120,
-        EACTOR_GET_RECORD_MSG_FLOAT,
-        EACTOR_GET_RECORD_MSG_DOUBLE,
-        EACTOR_GET_RECORD_MSG_STRING,
-        EACTOR_GET_RECORD_MSG_OBJECT,
-
-        EACTOR_SET_RECORD_MSG_INT = 130,
-        EACTOR_SET_RECORD_MSG_FLOAT,
-        EACTOR_SET_RECORD_MSG_DOUBLE,
-        EACTOR_SET_RECORD_MSG_STRING,
-        EACTOR_SET_RECORD_MSG_OBJECT,
-    };
-
-    EACTOR_MESSAGE_ID eType;
-    int nSubMsgID;
-    int nFormActor;
-    std::string data;
-    ////////////////////event/////////////////////////////////////////////////
-    NFGUID self;
-    //////////////////////////////////////////////////////////////////////////
-    EVENT_ASYNC_PROCESS_END_FUNCTOR_PTR xEndFuncptr;
-protected:
-private:
-};
-
-class NFIActor : public Theron::Actor, public NFILogicModule
-{
-public:
-    NFIActor(Theron::Framework& framework, NFIActorManager* pManager) : Theron::Actor(framework)
-    {
-        m_pActorManager = pManager;
+        m_pActorModule = pManager;
 
         RegisterHandler(this, &NFIActor::Handler);
     }
 
-    NFIActorManager* GetActorManager()
+	NFIActorModule* GetActorManager()
     {
-        return m_pActorManager;
+        return m_pActorModule;
     }
 
     virtual void AddComponent(NF_SHARE_PTR<NFIComponent> pComponent) = 0;
@@ -109,9 +45,7 @@ protected:
 private:
     void Handler(const NFIActorMessage& message, const Theron::Address from)
     {
-
-        //收到消息要处理逻辑
-        if (message.eType == NFIActorMessage::EACTOR_EVENT_MSG)
+        if (message.bComponentMsg > 0 )
         {
             HandlerSelf(message, from);
 
@@ -123,7 +57,7 @@ private:
     }
 
 protected:
-    NFIActorManager* m_pActorManager;
+	NFIActorModule* m_pActorModule;
 
 };
 

@@ -3,18 +3,18 @@
 //    @Author           :   LvSheng.Huang
 //    @Date             :   2013-09-28
 //    @Module           :   NFISkillConsumeManagerModule
-//    @Desc             :   技能消费机制管理类,所有类型的技能消费类型均需注册才能消费
+
 // -------------------------------------------------------------------------
 
-#ifndef _NFI_SKILLCONSUME_MANAGER_MODULE_H
-#define _NFI_SKILLCONSUME_MANAGER_MODULE_H
+#ifndef NFI_SKILLCONSUME_MANAGER_MODULE_H
+#define NFI_SKILLCONSUME_MANAGER_MODULE_H
 
 #include <iostream>
-#include "NFILogicModule.h"
+#include "NFIModule.h"
 #include "NFISkillConsumeProcessModule.h"
 
 class NFISkillConsumeManagerModule
-    : public NFILogicModule
+    : public NFIModule
 {
 public:
     virtual bool ResgisterConsumeModule(const int nModuleType, NFISkillConsumeProcessModule* pModule) = 0;

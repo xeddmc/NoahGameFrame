@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------
-//    @FileName      :    NFCProxyServerNet_ClientModule.h
+//    @FileName			:    NFCProxyServerNet_ClientModule.h
 //    @Author           :    LvSheng.Huang
 //    @Date             :    2013-05-06
 //    @Module           :    NFCProxyServerNet_ClientModule
@@ -12,15 +12,16 @@
 
 #include <string>
 #include "NFComm/NFMessageDefine/NFMsgDefine.h"
-#include "NFComm/NFCore/NFCHeartBeatManager.h"
 #include "NFComm/NFPluginModule/NFIProxyServerToWorldModule.h"
 #include "NFComm/NFPluginModule/NFIProxyServerNet_ServerModule.h"
 #include "NFComm/NFPluginModule/NFIKernelModule.h"
 #include "NFComm/NFPluginModule/NFIProxyLogicModule.h"
 #include "NFComm/NFPluginModule/NFINetModule.h"
-#include "NFComm/NFPluginModule/NFIElementInfoModule.h"
+#include "NFComm/NFPluginModule/NFIElementModule.h"
 #include "NFComm/NFPluginModule/NFILogModule.h"
-#include "NFComm/NFPluginModule/NFILogicClassModule.h"
+#include "NFComm/NFPluginModule/NFIClassModule.h"
+#include "NFComm/NFPluginModule/NFINetClientModule.h"
+#include "NFComm/NFPluginModule/NFIProxyServerToGameModule.h"
 
 class NFCProxyServerToWorldModule : public NFIProxyServerToWorldModule
 {
@@ -29,6 +30,7 @@ public:
     NFCProxyServerToWorldModule(NFIPluginManager* p)
     {
         pPluginManager = p;
+		mLastReportTime = 0;
     }
 
     virtual bool Init();
@@ -37,22 +39,26 @@ public:
 
     virtual bool AfterInit();
 
-    virtual void LogRecive(const char* str) {}
+    virtual void LogReceive(const char* str) {}
     virtual void LogSend(const char* str) {}
 
+	virtual NFINetClientModule* GetClusterModule();
     virtual bool VerifyConnectData(const std::string& strAccount, const std::string& strKey);
+	virtual void AddServerInfoExt(const std::string& key, const std::string& value);
 
 protected:
 
-    void OnReciveWSPack(const int nSockIndex, const int nMsgID, const char* msg, const uint32_t nLen);
     void OnSocketWSEvent(const int nSockIndex, const NF_NET_EVENT eEvent, NFINet* pNet);
 
     void Register(NFINet* pNet);
+	void ServerReport();
 
     void OnSelectServerResultProcess(const int nSockIndex, const int nMsgID, const char* msg, const uint32_t nLen);
     void OnServerInfoProcess(const int nSockIndex, const int nMsgID, const char* msg, const uint32_t nLen);
 
-    virtual void LogServerInfo(const std::string& strServerInfo);
+    void LogServerInfo(const std::string& strServerInfo);
+
+	void OnOtherMessage(const int nSockIndex, const int nMsgID, const char* msg, const uint32_t nLen);
 private:
     struct ClientConnectData
     {
@@ -70,15 +76,16 @@ private:
     NFMapEx<std::string, ClientConnectData> mWantToConnectMap;
 
 private:
+	NFINT64 mLastReportTime;
 
     NFILogModule* m_pLogModule;
     NFIProxyLogicModule* m_pProxyLogicModule;
     NFIKernelModule* m_pKernelModule;
     NFIProxyServerNet_ServerModule* m_pProxyServerNet_ServerModule;
-    NFIElementInfoModule* m_pElementInfoModule;
-    NFILogicClassModule* m_pLogicClassModule;
-    NFIClusterClientModule* m_pToGameServerClusterClient;
-
+    NFIElementModule* m_pElementModule;
+    NFIClassModule* m_pClassModule;
+	NFINetClientModule* m_pNetClientModule;
+	std::map<std::string, std::string> m_mServerInfoExt;
 };
 
 #endif
